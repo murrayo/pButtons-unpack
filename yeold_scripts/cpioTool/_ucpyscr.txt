@@ -1,0 +1,9 @@
+# @(#) Copy screens to $1 directory
+
+for i in `ls -d *SLM`
+do
+	echo "$i to $1"
+
+	cp -R $i $1
+done
+

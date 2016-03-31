@@ -1,0 +1,1 @@
+./do_io_start_here.sh -d ../ZCust/201510_DXB/dxbp -i -I ziostat_in_dxb.txt -l 4

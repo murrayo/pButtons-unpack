@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# @(#) _uplogclean - Clean logs that may grow to large if unattended
+
+#***************************************************************************#
+#
+#	This script is supplied as an example only.
+#	If you wish to modify it you may.
+#
+#***************************************************************************#
+#
+# PROGRAM: 
+#	_uplogclean 
+#
+# DESCRIPTION: 
+#	Cleans logs that may grow to large if unattended
+#
+# USAGE:  
+#	_uplogclean
+#
+# NOTE:
+#	This should be run by cron on a regular basis
+#***************************************************************************#
+
+
+
+	#-- Number of log records to keep
+
+	LOG_AMNT=500
+
+
+	#-- names of logs
+
+	PRODLOGS="EVOKED INQUIRY JOBQ MRT RELEASED printlog rpglog"
+
+
+	#-- chop logs
+
+	INST_DIR=`cat /usr/lib/rpg/s36where`	#-- Unibol directory
+
+	for i in $PRODLOGS
+	do
+
+		tail -${LOG_AMNT} ${INST_DIR}/log/$i > temp$$
+		cp temp$$ ${INST_DIR}/log/$i
+		rm temp$$
+
+	done
+
+
+	#-- spool log
+
+	tail -${LOG_AMNT} ${INST_DIR}/ulp/log >temp$$
+	cp temp$$ ${INST_DIR}/ulp/log
+	rm temp$$
+
+
+
+	#-- old HISTLOGs
+
+	for i in `ls ${INST_DIR}/log/HIST* | grep -v HISTLOG`
+	do
+		rm $i
+	done
+
+
+
+

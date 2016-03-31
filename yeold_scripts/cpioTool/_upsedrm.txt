@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# @(#)  Remove a line containing offending string
+
+# usage - _upsedrmv string extension 
+#         eg: _upsedrmv SRT,,LOGSTAT OCL                        
+#		remove all SRT,,LOGSTAT lines from migration created OCL	#		which are really RPG (copy members).
+
+# Note: hardcoded sed due to $ in file names
+
+for i in `ls *"${2}"`
+do
+	sed '/SRT,,LOGSTAT/d' $i >tmp$$   
+	cp tmp$$ $i
+	rm tmp$$
+	echo "$i line removed ${1} ${2}"
+done
+
+

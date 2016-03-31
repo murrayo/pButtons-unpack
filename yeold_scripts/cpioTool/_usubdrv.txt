@@ -1,0 +1,72 @@
+# @(#) Substitute driver
+
+
+A=212459Y
+B=232457Y
+
+a=212458Y
+b=232456Y
+
+
+for i in `eval grep -l ${A} *.SSM` 
+do
+	echo "Substitute of $i $A $a"
+
+	./_upsubst ${A} ${a} $i
+done
+
+for i in `eval grep -l ${B} *.SSM` 
+do
+	echo "Substitute of $i $B $b"
+
+	./_upsubst ${B} ${b} $i
+done
+
+
+echo "Now double checking"
+
+sleep 2
+
+for i in `ls *SSM_o`
+do
+	echo
+	echo $i
+	diff $i `echo $i | cut -d_ -f1`
+done
+
+
+echo "Now compiling"
+
+sleep 5
+
+
+	SSMLOG=logssm
+
+	clear
+
+	echo $SSMLOG >$SSMLOG
+
+
+	echo "Compile of all screen members in progress \n"
+
+	for i in `ls *.SSM_o`
+	do
+		i=`echo $i | cut -d_ -f1`
+
+		echo "compSSM $i"
+		echo "$i\n" >> $SSMLOG
+
+		j=`echo $i | cut -d. -f1`
+		usfgr "$i" "$j" 2>&1 | tee -a $SSMLOG
+	done
+
+
+	echo " \n"
+	echo "Compile of all  screen members complete. "
+	echo " \n"
+	echo "Check $SSMLOG for errors"
+	echo " \n"
+
+
+
+

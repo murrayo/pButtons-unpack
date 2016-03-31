@@ -1,0 +1,22 @@
+# @(#) Copy a named group of subdirectories
+
+for i in `find /work1/ibs -name "*SRCE" -print`
+do
+
+	
+	j=`basename "${i}"`
+	echo "copying ${i} to ./IBSSRCE/${j}"
+
+	cp -r "${i}" ./IBSSRCE/"${j}"
+
+done
+
+echo "copying /work1/ibs/IIBS to ./IBSSRCE/IIBS"
+
+cp -r /work1/ibs/IIBS ./IBSSRCE/IIBS    
+
+
+echo "Copy complete\n"
+
+
+

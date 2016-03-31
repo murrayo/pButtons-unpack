@@ -1,0 +1,5 @@
+sda
+VxVM8000
+VxVM9000 
+VxVM26000
+

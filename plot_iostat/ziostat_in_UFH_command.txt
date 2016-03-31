@@ -1,0 +1,4 @@
+ ./do_io_start_here.sh -d ../ZCust/ufh_redhat_2014-11/1013 -s -S zsar_in_UFH.txt -t 00:01:00 -i -I ziostat_in_UFH.txt -l3 
+ 
+ ./do_io_start_here.sh -d ../ZCust/ufh_redhat_2014-11/1013 -i -I ziostat_in_UFH.txt -l3 
+ 

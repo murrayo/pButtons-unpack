@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# @(#) very simple rename files xx.nnnnn, to xxNnnnnn     
+
+# rename filenames of the form xx.nnnnn, to xxNnnnnn
+# 	parm1 = xx 
+# 	parm2 = N
+
+for i in `ls ${1}*`
+do
+	cp $i `echo $i | tr . $2`
+	rm $i
+done
+
+

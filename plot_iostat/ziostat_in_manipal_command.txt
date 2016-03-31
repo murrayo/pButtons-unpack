@@ -1,0 +1,1 @@
+./do_io_start_here.sh -d ../ZCust/Manipal_2014_10AfterGoLive/TC -i -I ziostat_in_manipal.txt -l 4

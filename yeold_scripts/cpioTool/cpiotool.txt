@@ -1,0 +1,873 @@
+
+
+
+
+
+
+
+
+
+
+
+uptools/ulp/profile
+# @(#) Unibol Pacific Tools - default ulp profile
+
+PATH=/bin:/usr/bin:/etc:/usr/ucb:$HOME/bin:/usr/bin/X11:.
+
+export PATH
+
+if [ -s "$MAIL" ]           # This is at Shell startup.  In normal
+then echo "$MAILMSG"        # operation, the Shell checks
+fi                          # periodically.
+
+# upt - add unibol 4.3 path, start application with defaults
+
+PATH=${PATH}:/work3/bin43:	
+exec ./_upstulp
+
+
+
+uptools/sco/_upansi.ki amhplus|amhplus compatible
+#Created by keygen utility
+
+#27/09/93 16:14:37
+initkeys=,
+tidykeys=,
+primarylabels=,
+secondarylabels=,
+function=,
+left=\E[D,
+right=\E[C,
+up=\E[A,
+down=\E[B,
+backspace=\b,
+fieldadvance=\t,
+fieldback=\E[Z\E[Z,
+newline=\E[H,
+delete=,
+insert=\E[L,
+eraseinput=,
+# fieldexit=\E[F,
+fieldexit=+,
+field+=\E+,
+field-=\E-,
+dup=\Ed,
+enter=\r,
+errorreset=,
+home=,
+refresh=\Er,
+help=\Eh,
+print=\Ep,
+rollup=\E[G,
+rolldown=\E[I,
+clear=,
+inquiry=\Ei,
+cmd01=\E[M,
+cmd02=\E[N,
+cmd03=\E[O,
+cmd04=\E[P,
+cmd05=\E[Q,
+cmd06=\E[R,
+cmd07=\E[S,
+cmd08=\E[T,
+cmd09=\E[U,
+cmd10=\E[V,
+cmd11=\E[W,
+cmd12=\E[X,
+cmd13=\E[Y,
+cmd14=\E[*,
+cmd15=\E[a,
+cmd16=\E[b,
+cmd17=\E[c,
+cmd18=\E[d,
+cmd19=\E[e,
+cmd20=\E[f,
+cmd21=\E[g,
+cmd22=\E[h,
+cmd23=\E[i,
+cmd24=\E[j,
+
+
+uptools/sco/_upcpslm
+#!/bin/sh
+
+# @(#) copy slm directories to another directory
+
+# usage - _upcpslm target_directory      
+#         eg: _upcpslm /usr/boral/IMAS36
+
+
+for i in `ls -d *SLM`
+do
+	echo "$i giong to ${1}/$i"
+	copy -rv $i ${1}/$i
+done
+
+uptools/sco/_upstg 
+#!/bin/sh
+
+# @(#) Change screen colours        
+
+# usage: Wrap around unibol startup etc
+
+tput clear
+setcolor green black
+setcolor -r hi_white cyan 
+
+# start unibol etc here
+
+setcolor -n
+ 
+tput clear
+
+
+uptools/sco/bback 
+#!/bin/ksh
+# @(#) bback - delayed backup request - sco
+#
+# 
+# PROGRAM:
+#	bback
+#---------------------------------------------------------------------------
+
+Program=`basename $0`
+trap 'echo "$Program daily backup aborted" >> $LIST_LOG ; exit 2' 1 2 3 15
+
+error=0
+
+userid=`id | sed -e 's/uid=\([0-9]*\).*/\1/'`
+
+if [ "$userid" != "0" ]
+then
+	echo "You must be super user to run bback" >&2
+	exit 1
+fi
+
+
+#-- Constatnts
+
+BACKUP_DEVICE=/dev/rStp0
+LIST_LOG=/tmp/bback_log  
+	
+
+#-- Clear log
+
+/bin/date +"Complete data backup started at: %d %h %y : %r %a" > $LIST_LOG
+
+if ( : < /dev/rStp0 ) >/dev/null 2>/dev/null
+then
+	:
+else
+	echo "Tape not ready" >> $LIST_LOG
+	exit 1
+fi
+
+
+#------------------------------------------------------------------------
+#-- Backup 1. /u
+
+find /u -print | cpio -ocvB -K520000 > $BACKUP_DEVICE > /dev/null 2> /dev/null
+
+#------------------------------------------------------------------------
+#-- Verify
+
+echo "\nVERIFY SECTION\n" >> $LIST_LOG
+
+tape -s rewind /dev/rStp0
+cpio -icvdBt < $BACKUP_DEVICE >> $LIST_LOG 2>> $LIST_LOG
+
+echo "\nEnd of Backup - OK\n" >> $LIST_LOG
+
+tail $LIST_LOG >tmp$$
+cp tmp$$ $LIST_LOG
+rm tmp$$
+
+mail root < $LIST_LOG
+
+uptools/sco/amhplus.ki amhplus|amhplus compatible
+#Created by keygen utility
+
+#27/09/93 16:14:37
+initkeys=,
+tidykeys=,
+primarylabels=,
+secondarylabels=,
+function=,
+left=\E[D,
+right=\E[C,
+up=\E[A,
+down=\E[B,
+backspace=\b,
+fieldadvance=\t,
+fieldback=\E[Z\E[Z,
+newline=\E[H,
+delete=,
+insert=\E[L,
+eraseinput=,
+# fieldexit=\E[F,
+fieldexit=+,
+field+=\E+,
+field-=\E-,
+dup=\Ed,
+enter=\r,
+errorreset=,
+home=,
+refresh=\Er,
+help=\Eh,
+print=\Ep,
+rollup=\E[G,
+rolldown=\E[I,
+clear=,
+inquiry=\Ei,
+cmd01=\E[M,
+cmd02=\E[N,
+cmd03=\E[O,
+cmd04=\E[P,
+cmd05=\E[Q,
+cmd06=\E[R,
+cmd07=\E[S,
+cmd08=\E[T,
+cmd09=\E[U,
+cmd10=\E[V,
+cmd11=\E[W,
+cmd12=\E[X,
+cmd13=\E[Y,
+cmd14=\E[*,
+cmd15=\E[a,
+cmd16=\E[b,
+cmd17=\E[c,
+cmd18=\E[d,
+cmd19=\E[e,
+cmd20=\E[f,
+cmd21=\E[g,
+cmd22=\E[h,
+cmd23=\E[i,
+cmd24=\E[j,
+
+
+uptools/sco/ibm3180.ki 
+#===============================================================
+#
+# REF: 
+#
+#	[keydefs/ibm3151.ki] version 1.3
+#
+# NAME:
+#
+#	Keyinfo definition for the IBM 3151
+#
+#	This keyboard layout is based on the UK ASCII type
+#	keyboard and is the default when TERM is set to ibm3151.
+#
+# AUTHOR:
+#
+#	Software Ireland
+#	
+#===============================================================
+#
+# KEY ASSIGNMENT:
+#
+#	Key label			Physical keys.
+#	---------			--------------
+#
+#	Backspace:			Backspace key
+#	Clear:				Clear key
+#	Cmd: 1-12			F1-F12
+#	Cmd:13-24			Shift F1-F12
+#	Delete:				Delete key
+#	Down:				Cursor down key
+#	Dup:				Print line
+#	Enter:				Send or Enter
+#	Eraseinput:			Erase EOF
+#	Errorreset:			Reset key
+#	Field+:				Ctrl Send line
+#	Field-:				Send line
+#	Fieldadvance:			Tab key
+#	Fieldback:			Shift Tab Key or Back Tab
+#	Fieldexit:			Return Key
+#	Help:				Ctrl delete or ESC ?
+#	Home:				Home key
+#	Inquiry:			Jump or Ctrl/A
+#	Insert:				Insert Key
+#	Left:				Cursor left key
+#	Newline:			Ctrl return
+#	Print:				Print key
+#	Refresh:			Ctrl print line or ctrl L
+#	Right:				Cursor right key
+#	Rolldown:			Ctrl Erase EOF or Ctrl X
+#	Rollup:				Ctrl Clear or Ctrl W
+#	Up:				Cursor up key
+#	
+#
+#===============================================================
+#===============================================================
+#
+ibm5250amh|ibm5250amh standard terminal with UK ASCII keypad
+#
+# Initialise the Print and Reset keys
+#
+initkeys=\E(:\000\000\E):
+tidykeys=\E(;\000\000\E);
+#
+# define the keys
+#
+backspace=\010,
+clear=\EL\r,
+cmd01=\Ea\r,
+cmd02=\Eb\r,
+cmd03=\Ec\r,
+cmd04=\Ed\r,
+cmd05=\Ee\r,
+cmd06=\Ef\r,
+cmd07=\Eg\r,
+cmd08=\Eh\r,
+cmd09=\Ei\r,
+cmd10=\Ej\r,
+cmd11=\Ek\r,
+cmd12=\El\r,
+cmd13=\E!a\r,
+cmd14=\E!b\r,
+cmd15=\E!c\r,
+cmd16=\E!d\r,
+cmd17=\E!e\r,
+cmd18=\E!f\r,
+cmd19=\E!g\r,
+cmd20=\E!h\r,
+cmd21=\E!i\r,
+cmd22=\E!j\r,
+cmd23=\E!k\r,
+cmd24=\E!l\r,
+delete=\EQ,
+delete=\177,
+down=\EB,
+dup=\EW\r,
+enter=\E8\r,
+eraseinput=\EI,
+errorreset=\E!z\r,
+field+=\E 8\r,
+field-=\E!8\r
+fieldadvance=\t,
+fieldback=\E2,
+fieldexit=\r,
+help=\E?,
+help=\EO,
+home=\EH,
+inquiry=\001,
+inquiry=\E"A,
+insert=\EP,
+left=\ED,
+newline=\n,
+print=\EU\r,
+print=\E W\r,
+refresh=\Er,
+refresh=\EV\r,
+refresh=\014,
+right=\EC,
+rolldown=\EJ,
+rolldown=\030,
+rollup=\EK,
+rollup=\027,
+up=\EA,
+
+
+
+uptools/upcomp/compALL :
+# @(#) Compile ALL of ibs
+
+#-- exceptions
+
+./_upcompRPGx IMAS36
+
+#-- The rest
+
+.
+
+
+uptools/upcomp/compMRT 
+#!/bin/sh
+
+# @(#) compile MRT in passed dir
+
+# MRT program is RPG by default
+
+# usage: compMRT source_dir object_dir <source_type>
+
+# run from head of source and copy directory, ie. ibs
+#
+# eg.    ibs
+#         |
+#       -------------
+#       |           |
+#     XASRCE     BISRCE
+#
+#  example: cd ..../ibs
+#           compMRT BISRCE IBS ARP
+#
+
+	TYPE=${3:-RPG}
+
+	MRTLOG=logs/logmrt`echo $1 | cut -c1-2`$3
+
+	clear
+
+	echo $MRTLOG > $MRTLOG
+
+
+grep  KNUM ${1}/*${TYPE} |
+	awk 'BEGIN { OFS = ":" } { print $1 , $4 } ' |
+	awk -F":" 'BEGIN { OFS = ":" } { print $1, $3 }' >mrtlist$$
+
+for i in `cat mrtlist$$`
+do
+	MRT_NUM=`echo $i | cut -d: -f2`
+	i=`echo $i | cut -d. -f1`
+	i=`echo $i | cut -d\/ -f2`
+
+	if [ $MRT_NUM -gt 1 ]
+	then
+
+		echo "compMRT $1 $2 $i $MRT_NUM"
+	
+        	echo "\n\n $i *** \n" >> $MRTLOG
+		rpgauto -c -w -m${MRT_NUM} -x${2} ${i} ${1} 2>&1|tee -a $MRTLOG
+
+	fi
+done
+
+rm mrtlist$$
+
+
+uptools/upcomp/compMSG 
+#!/bin/sh
+
+# @(#) Compile all MSG 
+# usage: compMSG source_dir object_dir 
+
+# run from head of source and copy directory, ie. ibs
+#
+# eg.    ibs
+#         |
+#       -------------
+#       |           |
+#     XASRCE     BISRCE
+#
+#  example: cd ..../ibs
+#           compMSG BISRCE IBS
+#
+
+
+	MSGLOG=logs/logmsg`echo $1 | cut -c1-2`
+
+	clear
+
+	echo $MSGLOG > $MSGLOG
+
+	cd $1
+
+	echo "Compile of all screen members in progress \n"
+
+	for i in `ls *.MSG`
+	do
+		echo "compMSG $1 $2 $i"
+		echo "$i\n" >> ../$MSGLOG 
+
+		i=`echo $i | cut -d. -f1`
+		umgbld "$i" 2>&1 | tee -a ../$MSGLOG
+
+	done
+
+	cd ..
+
+	echo " \n"
+	echo "Compile of all menus complete. "
+	echo " \n"
+	echo "Check $MSGLOG for errors"
+	echo " \n"
+
+
+uptools/upcomp/compRPG 
+#!/bin/sh
+
+# @(#) compile RPG and ARP  in passed dir
+
+# OpenIBS mod to compile ARP only, ibs has no real RPG programs
+
+# usage: compRPG source_dir object_dir
+
+# run from head of source and copy directory, ie. ibs
+#
+# eg.    ibs
+#         |
+#       -------------
+#       |           |
+#     XASRCE     BISRCE  
+#
+#  example: cd ..../ibs
+#           compRPG BISRCE IBS
+#
+
+
+	RPGLOG=logs/logrpg`echo $1 | cut -c1-4`
+
+	clear
+
+	echo $RPGLOG > $RPGLOG
+
+	echo "Compile of RPG members in progress \n"
+
+	for i in `ls "${1}"/*.RPG`
+	do
+
+		if grep "^.....H" $i 2>&1 >/dev/null
+		then
+
+		i=`basename $i`
+		i=`echo $i | cut -d. -f1`
+		echo "compRPG $1 $2 $i"
+
+		echo "\n\n$i" >> $RPGLOG
+		echo "________________" >> $RPGLOG
+
+		rpgcomp -w -o "${2}" -s "${1}" "$i" 2>&1 | tee -a $RPGLOG
+
+		else
+
+		echo "\n\n $i not a real program" | tee -a $RPGLOG
+		echo "________________" >> $RPGLOG
+
+		fi
+	done
+
+	echo "Compile of ARP members in progress \n"
+
+
+	for i in `ls "${1}"/*.ARP`
+	do
+		i=`basename $i`
+		i=`echo $i | cut -d. -f1`
+		echo "compRPG (ARP) $1 $2 $i"
+
+		echo "\n\n$i" >> $RPGLOG
+		echo "________________" >> $RPGLOG
+
+		rpgauto -c -w -x $2 "$i" $1 2>&1 | tee -a $RPGLOG
+	done
+#
+# Send completion message
+#
+
+	echo " \n"
+	echo "Compile of RPG members complete. All objects are *.RLM "
+	echo " \n"
+	echo "Check $RPGLOG in same directory for errors"
+	echo " \n"
+
+
+
+uptools/upcomp/compRPGx 
+#!/bin/sh
+
+# @(#) compile RPG only in hard coded list
+
+# usage: compRPGx object_dir
+
+# run from head of source and copy directory, ie. ibs
+#
+# eg.    ibs
+#         |
+#       -------------
+#       |           |
+#     XASRCE36     APSRCE36  
+#
+#  example: cd ..../ibs
+#
+#           compRPG IBS
+#           -----------
+#
+
+LIST="ARSRCE36/ARMSUM.RPG
+XASRCE36/IQ53A.RPG
+XASRCE36/NERROR.RPG
+XASRCE36/NIGHT1.RPG"
+
+
+
+	RPGLOG=logs/logrpgx`echo $1 | cut -c1-2`
+
+	clear
+
+	echo $RPGLOG > $RPGLOG
+
+	echo "Compile of RPG members in progress \n"
+
+	for i in ${LIST}
+	do
+		j=`dirname $i`
+		i=`basename $i`
+		i=`echo $i | cut -d. -f1`
+		echo "compRPG $1 $j $i"
+
+		echo "\n\n$i" >> $RPGLOG
+		echo "________________" >> $RPGLOG
+
+		rpgcomp -w -o "${1}" -s "${j}" "$i" 2>&1 | tee -a $RPGLOG
+	done
+
+
+#
+# Send completion message
+#
+
+	echo " \n"
+	echo "Compile of RPG members complete. All objects are *.RLM "
+	echo " \n"
+	echo "Check $RPGLOG in same directory for errors"
+	echo " \n"
+
+
+
+uptools/upcomp/compSSM 
+#!/bin/sh
+
+# @(#) Compile all SSM
+# usage: compSSM source_dir object_dir 
+
+# run from head of source and copy directory, ie. ibs
+#
+# eg.    ibs
+#         |
+#       -------------
+#       |           |
+#     XASRCE     BISRCE  
+#
+#  example: cd ..../ibs
+#           compSSM BISRCE IBS
+#
+
+
+	SSMLOG=logs/logssm`echo $1 | cut -c1-2`
+
+	clear
+
+	echo $SSMLOG >$SSMLOG
+
+
+	cd $1
+
+	echo "Compile of all screen members in progress \n"
+
+	for i in `ls *.SSM`
+	do
+		echo "compSSM $1 $2 $i"
+		echo "$i\n" >>../$SSMLOG
+
+		j=`echo $i | cut -d. -f1`
+		usfgr "$i" "../${2}/$j" 2>&1 | tee -a ../$SSMLOG
+	done
+
+
+	cd ..
+
+	echo " \n"
+	echo "Compile of all  screen members complete. "
+	echo " \n"
+	echo "Check $SSMLOG for errors"
+	echo " \n"
+
+
+
+uptools/upcomp/_updodat :
+
+# @(#) simple date substtution
+
+for i in `find . -print`
+do 
+
+	if grep COPYRIGHT.*1992 $i
+	then
+		sed 's/1992/1993/' $i >temp$$
+		cp temp$$ $i
+		rm temp$$
+	fi
+
+done
+
+
+
+
+
+uptools/upcomp/_upkodak :
+
+OBJ=ONL580
+
+MRTLOG=logs/logmrtSORPGk
+echo $MRTLOG > $MRTLOG
+
+
+for i in `ls SOURCE/[A-M]*RPG`
+do
+
+	for j in `grep -l " KNUM " $i`
+	do
+		n1=`grep " KNUM " $j | cut -c53-56`
+		n2=`grep " KNUM " $j | cut -c6`
+		n3=`grep " KNUM " $j | cut -c63-65`
+
+		n1=Z$n1
+		n2=Z$n2
+
+		n2=`echo $n2 | cut -c1-2`
+
+		if [ $n2 = ZF ]
+		then
+			if [ $n1 = ZKNUM ]
+			then
+
+				if [ $n3 -gt 1 ]
+				then
+
+				j=`echo $j | cut -d. -f1`
+				j=`echo $j | cut -d\/ -f2`
+
+				echo "compMRT SOURCE ONL580 $j $n3"
+
+		echo "\n\n compMRT SOURCE $OBJ $j $n3" >> $MRTLOG
+
+		rpgauto -c -w -m$n3 -x$OBJ $j SOURCE 2>&1|tee -a $MRTLOG
+
+				fi
+			fi
+		fi
+
+		
+	
+	done
+
+done
+
+
+
+for i in `ls SOURCE/[N-Z]*RPG`
+do
+
+	for j in `grep -l " KNUM " $i`
+	do
+		n1=`grep " KNUM " $j | cut -c53-56`
+		n2=`grep " KNUM " $j | cut -c6`
+		n3=`grep " KNUM " $j | cut -c63-65`
+
+		n1=Z$n1
+		n2=Z$n2
+
+		n2=`echo $n2 | cut -c1-2`
+
+		if [ $n2 = ZF ]
+		then
+			if [ $n1 = ZKNUM ]
+			then
+
+				if [ $n3 -gt 1 ]
+				then
+
+				j=`echo $j | cut -d. -f1`
+				j=`echo $j | cut -d\/ -f2`
+
+				echo "compMRT SOURCE ONL580 $j $n3"
+
+		echo "\n\n compMRT SOURCE $OBJ $j $n3" >> $MRTLOG
+
+		rpgauto -c -w -m$n3 -x$OBJ $j SOURCE 2>&1|tee -a $MRTLOG
+
+				fi
+			fi
+		fi
+
+		
+	
+	done
+
+done
+
+
+
+uptools/upcomp/_upfails 
+#!/bin/sh
+
+# @(#) list programs that did not compile
+
+# usage - _upfails extensionA extensionB
+#         eg: _upfails RPG RLM      will compare list of RPGS with RLMS
+
+
+>list"${1}"
+>list"${2}"
+
+for i in `ls *"${1}"`
+do
+	i=`echo $i | cut -d. -f1`
+	echo $i >> list"${1}"
+done
+
+for i in `ls *"${2}"`
+do
+	i=`echo $i | cut -d. -f1`
+	echo $i >> list"${2}"
+done
+
+diff list"${1}" list"${2}"
+
+>list"${1}"
+>list"${2}"
+
+
+
+uptools/upcomp/_uprpgto 
+#!/bin/sh
+
+# @(#)  change the extension on rpg programs with copy menber to arp
+
+# usage - _uprpgtoarp  SOURCE_LIB
+#		example: _uprpgtoarp RTZSRC
+
+CURR_DIR=`pwd`
+cd $1
+
+for i in `grep -l "^.....H"  *RPG`
+do
+	j=`echo $i | cut -d. -f1`
+        mv $i ${j}.ARP
+	echo "$i moved to ${j}.ARP"
+done
+
+for i in `ls *RPG`
+do
+	j=`echo $i | cut -d. -f1`
+        mv $i ${j}.UNS
+	echo "$i moved to ${j}.UNS"
+done
+
+cd $CURR_DIR
+
+
+
+
+
+
+
+
+
+uptools/_utrunc :
+
+for i in `ls`
+do
+
+	if [ `echo $i | cut -c1-6` = _upcom ]
+	then
+
+		mv $i `echo $i | cut -c3-10`
+	else
+
+		mv $i `echo $i | cut -c1-8`
+	fi
+
+done

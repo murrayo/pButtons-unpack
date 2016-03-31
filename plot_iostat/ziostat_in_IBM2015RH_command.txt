@@ -1,0 +1,1 @@
+./do_io_start_here.sh -d ../ZCust/bench_IBM201502_Cambridge/collected_RH/0317/Run500_16x -r -I ziostat_in_IBM2015RH.txt -l 4

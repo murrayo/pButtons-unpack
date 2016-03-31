@@ -1,0 +1,2 @@
+./do_io_start_here.sh -n -l 4 -d ../ZCust/201602_VSAN/0224/Run700_12x -i -I ziostat_in_VSAN.txt -g
+

@@ -1,0 +1,1 @@
+./do_io_start_here.sh -n -d ../ZCust/bench_IBM201502_Cambridge/collected_July2015/AIX/0708/RunChris_iostat_16x -a -I ziostat_in_IBM2015.txt

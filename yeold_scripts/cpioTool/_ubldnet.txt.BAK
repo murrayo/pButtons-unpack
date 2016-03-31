@@ -1,0 +1,45 @@
+echo "machine SUNB10  login BOTT  password JACK  macdef init" >newnetrc
+echo "type image"  >> newnetrc 
+echo "cd QS36F" >> newnetrc
+
+for i in `cat asfiles`
+do
+	TO_NAME=`echo ${i} | cut -d. -f1`
+	echo "get ${i} hold/${TO_NAME}"  >> newnetrc
+done
+
+echo "quit" >> newnetrc
+echo " " >> newnetrc
+
+
+
+uptools/mig/_uline25 
+#!/bin/ksh
+
+# @(#) srchb - search for 24 in column 19 of SSM
+
+
+for i in `ls *SSM`
+do
+		sed -n '/24/p' $i | 
+		awk ' 
+			{
+			SS = substr($0,19,2)
+				if ( SS == "24" ) {
+					LENGTH = substr($0,17,2)
+					START  = substr($0,21,2)
+					TOTAL  = LENGTH + START
+					if ( TOTAL  > 79 ) {
+						if ( FILENAME != PREVFILE ) {
+						printf "\n file %s\n", FILENAME
+						PREVFILE = FILENAME
+						}
+						printf "%s\n", $0
+					}
+				}
+			}' $i
+done
+
+
+
+

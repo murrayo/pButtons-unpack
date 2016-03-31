@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# @(#) Change display colours        
+
+# usage: Wrap around startup details
+
+tput clear
+setcolor blue white
+setcolor -r yellow red
+
+# start unibol etc here
+
+setcolor -n
+ 
+tput clear
+
+
+

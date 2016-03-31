@@ -1,0 +1,1 @@
+./do_io_start_here.sh -d ../zCust/SCGC/04 -a -I ziostat_in_Glasgow.txt

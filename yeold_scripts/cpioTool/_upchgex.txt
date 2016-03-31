@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# @(#)  change the extension on a group of files
+
+# usage - _upchgext from to
+#         eg: _upchgext UNS RPG    # will change all UNS to RPG
+
+
+for i in `ls *"${1}"`
+do
+	j=`echo $i | cut -d. -f1`
+        mv $i ${j}.${2}
+	echo "$i moved to ${j}.${2}"
+done
+
+

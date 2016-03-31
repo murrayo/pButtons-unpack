@@ -1,0 +1,16 @@
+# @(#) Unibol Pacific Tools - default demo profile
+
+PATH=/bin:/usr/bin:/etc:/usr/ucb:$HOME/bin:/usr/bin/X11:.
+
+export PATH
+
+if [ -s "$MAIL" ]           # This is at Shell startup.  In normal
+then echo "$MAILMSG"        # operation, the Shell checks
+fi                          # periodically.
+
+# upt - add unibol 4.3 path, start application with defaults
+
+PATH=${PATH}:/work3/bin43:	
+exec ./_upstartapp /work3/conversion/<DIRECTORY> [LIB] [MENU] [WSID]
+
+

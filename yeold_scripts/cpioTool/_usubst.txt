@@ -1,0 +1,26 @@
+# @(#) Substitute string 
+
+# usage: upsubst <this> <for_this> <in_this_file>
+
+# Substitute in place one word with another, use this command in a loop
+#
+# e.g. 	for i in `grep -l this` 
+#	do
+#		_upsubst this for_this $i
+#	done
+
+if [ ! -f ${3}_o ]
+then
+	cp $3 ${3}_o 
+fi
+
+eval sed 's/${1}/${2}/g' $3 > temp$$
+
+cp temp$$ $3
+
+rm temp$$
+
+
+
+
+

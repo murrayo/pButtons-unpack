@@ -1,0 +1,1 @@
+./do_io_start_here.sh -d ../ZCust/201510_GS14_12Disk -i -I ziostat_in_sles11.txt -l 4

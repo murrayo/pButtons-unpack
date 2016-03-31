@@ -1,0 +1,1 @@
+./do_io_start_here.sh  -n -d ../ZCust/201508_NHLS_1 -i -I ziostat_in_NHLS.txt -l 4 -g

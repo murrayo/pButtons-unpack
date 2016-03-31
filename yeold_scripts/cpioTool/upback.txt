@@ -1,0 +1,82 @@
+#!/bin/ksh
+# @(#) upback - delayed backup request
+#
+# 
+# PROGRAM:
+#	upback
+#---------------------------------------------------------------------------
+
+#-- Check super user id
+
+Program=`basename $0`
+trap 'echo "$Program daily backup aborted" >> $LIST_LOG ; exit 2' 1 2 3 15
+
+error=0
+
+userid=`id | sed -e 's/uid=\([0-9]*\).*/\1/'`
+
+if [ "$userid" != "0" ]
+then
+	echo "You must be super user to run upback" >&2
+	exit 1
+fi
+
+
+#-- Constatnts
+
+BACKUP_DEVICE=/dev/rmt0
+LIST_LOG=/tmp/upback_log  
+
+BACKUP_LIST="/home
+/work1"
+	
+
+#-- Clear log
+
+/bin/date +"Complete data backup started at: %d %h %y : %r %a" > $LIST_LOG
+
+
+#-- Check tape loded
+
+if ( : < ${BACKUP_DEVICE} ) >/dev/null 2>/dev/null
+then
+	:
+else
+	echo "Tape $BACKUP_DEVICE not ready" >> $LIST_LOG
+	exit 1
+fi
+
+
+#------------------------------------------------------------------------
+
+for i in $BACKUP_LIST
+do
+
+find $i -print | backup -ivqpf ${BACKUP_DEVICE}.1 > /dev/null 2> /dev/null
+
+done
+
+#------------------------------------------------------------------------
+
+
+#-- Verify
+
+echo "\nVERIFY SECTION\n" >> $LIST_LOG
+
+tctl rewind ${BACKUP_DEVICE}
+
+for i in $BACKUP_LIST
+do
+restore -s1 -Tqf ${BACKUP_DEVICE}.1 >> $LIST_LOG 2>> $LIST_LOG
+done
+
+
+echo "\nEnd of Backup - OK\n" >> $LIST_LOG
+
+
+tail $LIST_LOG >tmp$$
+
+mail root < tmp$$
+rm tmp$$
+
+

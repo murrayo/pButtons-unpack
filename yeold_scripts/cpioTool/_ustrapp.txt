@@ -1,0 +1,75 @@
+#!/bin/sh
+
+# @(#) _upstartapp - Starts a Unibol application 
+# Unibol Pacific
+
+#***************************************************************************#
+#
+#	This script is supplied as an example only.
+#	If you wish to modify it you may.
+#
+#***************************************************************************#
+#
+# PROGRAM: 
+#	_upstartapp 
+#
+# DESCRIPTION: 
+#	Performs housekeeping and setup prior to starting application
+#
+# USAGE:  
+#	_upstartapp <directory> [library] [menu] [wsid]
+#
+#	defaults will be used if no entry for library, menu, wsid
+#
+#***************************************************************************#
+
+_DIRECTORY=$1
+
+#-- User definable defaults
+
+_LIBY=${2:-"."}
+_MENU=${3:-"SIMAIN"}
+_WSID=${4:-"X"}
+
+if [ $_WSID != "X" ]  
+then
+	_WSID="-w${_WSID}"
+else
+	_WSID=
+fi
+
+
+#-- Start the startup
+
+START_DIRECTORY=`pwd`
+cd "${_DIRECTORY}"
+
+
+#-- Set default file permissions  -rw-rw-r--, very important if multiple users
+
+	umask 002
+
+
+#-- Save only the last nnn records of production logs to conserve disk
+
+#	_uplogclean	#-- should be run by cron on regular basis
+
+
+#-- set non_standard terminal and keyborad types (only) 
+#-- Create your own keyboard maps if you wish
+
+	case "$TERM" in
+	vt100)
+		S36KEY=vt100-a
+		export S36KEY
+		;;
+	esac
+
+
+#-- Start application
+
+s36 -l${_LIBY} -m${_MENU} ${_WSID}
+
+cd ${START_DIRECTORY}
+
+

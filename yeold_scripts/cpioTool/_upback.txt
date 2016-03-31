@@ -1,0 +1,89 @@
+#!/bin/ksh
+# @(#) _upback - delayed backup request
+#
+# 
+# PROGRAM:
+#	_upback
+#
+#	run from cron on a nightly/weekly basis
+#---------------------------------------------------------------------------
+
+Program=`basename $0`
+trap 'echo "$Program aborted"; exit 2' 1 2 3 15
+
+error=0
+
+userid=`id | sed -e 's/uid=\([0-9]*\).*/\1/'`
+
+if [ "$userid" != "0" ]
+then
+	echo "You must be super user to run cback" >&2
+	exit 1
+fi
+
+
+mkdev -l rmt0 > /dev/null 2> /dev/null
+
+
+#-- Constatnts
+
+BACKUP_DEVICE=/dev/rmt0.1
+LIST_LOG=/tmp/cback_log  
+	
+
+#-- Clear log
+
+/bin/date +"Complete data backup started at: %d %h %y : %r %a" > $LIST_LOG
+
+if ( : < /dev/rmt0 ) >/dev/null 2>/dev/null
+then
+	:
+else
+	echo "Tape not ready" >> $LIST_LOG
+	exit 1
+fi
+
+
+#-- Rewind tape
+
+tctl -f/dev/rmt0.1 rewind
+
+
+#------------------------------------------------------------------------
+#-- Backup 1. /home
+
+cd /home
+find . -print | backup -ivqpf$BACKUP_DEVICE > /dev/null 2> /dev/null
+
+
+#------------------------------------------------------------------------
+#-- Backup 2. /work1       
+
+cd /work1
+find . -print | backup -ivqpf$BACKUP_DEVICE > /dev/null 2> /dev/null
+
+
+#------------------------------------------------------------------------
+#-- Backup 3. /work3       
+
+cd /work3
+find . -print | backup -ivqpf$BACKUP_DEVICE > /dev/null 2> /dev/null
+
+#------------------------------------------------------------------------
+#-- Rewind tape and verify
+
+echo "\nVERIFY SECTION\n" >> $LIST_LOG
+
+tctl -f/dev/rmt0 rewind
+
+restore -s1 -Tqf$BACKUP_DEVICE >> $LIST_LOG 2>> $LIST_LOG
+restore -s1 -Tqf$BACKUP_DEVICE >> $LIST_LOG 2>> $LIST_LOG
+restore -s1 -Tqf$BACKUP_DEVICE >> $LIST_LOG 2>> $LIST_LOG
+
+tctl -f/dev/rmt0 rewind
+echo "\nEnd of Backup - OK\n" >> $LIST_LOG
+
+# tail $LIST_LOG >tmp$$
+# cp tmp$$ $LIST_LOG
+# rm tmp$$
+

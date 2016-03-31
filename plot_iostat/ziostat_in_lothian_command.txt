@@ -1,0 +1,2 @@
+./do_io_start_here.sh -d ../ZCust/Lothian/2015_04/pButtonsOnlyAPP34DB/DB -i -I ziostat_in_lothian.txt -l 3 2>/dev/null
+
