@@ -72,9 +72,9 @@ then
 	outfile="../"${foldername}"_3_Sigma_PeakPeak_mgstat.csv"
 	if [ ! -f $outfile ]
 	then
-		printf "Site,File name,3 Sigma Peak  Glorefs,3 Sigma Peak RemGrefs,3 Sigma Peak PhyRds,3 Sigma Peak GloUpds,3 Sigma Peak WIJwri,3 Sigma Peak Jrnwrts,3 Sigma Peak PhyWrs,3 Sigma Peak IOPS (est)" > $outfile
-		printf ",ABS PEAK-->,Peak  Glorefs,Peak RemGrefs,Peak PhyRds,Peak GloUpds,Peak WIJwri,Peak Jrnwrts,Peak PhyWrs,Peak IOPS (est)" >> $outfile
-		printf ",AVERAGE-->,Average  Glorefs,Average RemGrefs,Average PhyRds,Average GloUpds,Average WIJwri,Average Jrnwrts,Average PhyWrs (>0 only),Average IOPS (est)" >> $outfile
+		printf "Site,File name,3 Sigma Peak  Glorefs,3 Sigma Peak RemGrefs,3 Sigma Peak PhyRds,3 Sigma Rdratio,3 Sigma Peak GloUpds,3 Sigma Rourefs,3 Sigma Peak WIJwri,3 Sigma Peak Jrnwrts,3 Sigma Peak PhyWrs,3 Sigma Peak IOPS (est)" > $outfile
+		printf ",ABS PEAK-->,Peak  Glorefs,Peak RemGrefs,Peak PhyRds,Peak Rdratio,Peak GloUpds,Peak Rourefs,Peak WIJwri,Peak Jrnwrts,Peak PhyWrs,Peak IOPS (est)" >> $outfile
+		printf ",AVERAGE-->,Average  Glorefs,Average RemGrefs,Average PhyRds,Average Rdratio,Average GloUpds,Average Rourefs,Average WIJwri,Average Jrnwrts,Average PhyWrs (>0 only),Average IOPS (est)" >> $outfile
 		printf "\r\n" >>$outfile
 	else
 		echo "Appending to end of existing $outfile"
@@ -130,7 +130,7 @@ then
 		echo "Take off top and take off bottom: " $takeOff
 		
 		#--- Sort and print 3 Sigma Peak Peak
-		for fieldNo in 3 4 6 8 18 20 14 30 
+		for fieldNo in 3 4 6 7 8 10 18 20 14 30 
 		do 
 			# Create temp file containing only data between Sigma
 			printf "," >>$outfile
@@ -140,7 +140,7 @@ then
 		
 		printf "," >>$outfile
 		#--- Sort and print true Peak
-		for fieldNo in 3 4 6 8 18 20 14 30
+		for fieldNo in 3 4 6 7 8 10 18 20 14 30
 		do 
 			printf "," >>$outfile
 			theCell=`sort -g -r -t, -k${fieldNo} ${infile} | head -1 | cut -f${fieldNo} -d,`
@@ -150,7 +150,7 @@ then
 
 		printf "," >>$outfile	
 		# Now for Average - need to loose top and bottom for 3 sigma again
-		for fieldNo in 3 4 6 8 18 20
+		for fieldNo in 3 4 6 7 8 10 18 20
 		do 
 			printf "," >>$outfile
 			printf "`sort -g -r -t, -k${fieldNo} ${infile} | head -$(($totalLines-$takeOff)) | tail -$(((totalLines-$takeOff)-$takeOff))`" >ztempa.csv
