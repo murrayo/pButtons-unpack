@@ -66,79 +66,85 @@ Looped="N"
 for j in ${Filelist}
 do
 
-	echo $j
+	if [ $j != "hold" ]
+	then	
+		echo $j
 	
+		if [ ! -z $graphs ];
+		then
 
-	if [ ! -z $graphs ];
-	then
-
-		# 1. Build graphs - aix or default is red hat, default no snap shots
+			# 1. Build graphs - aix or default is red hat, default no snap shots
 		
-			if [ ! -z $aix ];
-			then
-
-				if [ -z $snapshot ];
+				if [ ! -z $aix ];
 				then
-					./dgsh -m -a6 -d "${InputFolder}/$j" 2>/dev/null 
+
+					if [ -z $snapshot ];
+					then
+						./dgsh -m -a6 -d "${InputFolder}/$j" 2>/dev/null 
 					
+					else	
+						./dgsh -m -s -a6 -d "${InputFolder}/$j" 2>/dev/null 
+					fi
+					
+					# comment for benchmark
+					#./peakavg.sh -d  "${InputFolder}/$j" -m -x			# peak hours only
+				
+					./peakavg.sh -d  "${InputFolder}/$j" -m -x -a		# all times
+				
 				else	
-					./dgsh -m -s -a6 -d "${InputFolder}/$j" 2>/dev/null 
-				fi
-					
-				# comment for benchmark
-				#./peakavg.sh -d  "${InputFolder}/$j" -m -x			# peak hours only
-				
-				./peakavg.sh -d  "${InputFolder}/$j" -m -x -a		# all times
-				
-			else	
 
-				if [ -z $snapshot ];
-				then
-					echo "x"
-					./dgsh -mv -d "${InputFolder}/$j" 2>/dev/null 
-				else			
-					echo "y"			
-					./dgsh -mv -s -d "${InputFolder}/$j" 2>/dev/null 
+					if [ -z $snapshot ];
+					then
+						echo "x"
+						./dgsh -mv -d "${InputFolder}/$j" 2>/dev/null 
+					else			
+						echo "y"			
+						./dgsh -mv -s -d "${InputFolder}/$j" 2>/dev/null 
 					
-				fi
+					fi
 						
-				# get corrected peaks, peaks and averages as summary - peak hours
-				# comment for benchmark 
-				#./peakavg.sh -d  "${InputFolder}/$j" -m -v
+					# get corrected peaks, peaks and averages as summary - peak hours
+					# comment for benchmark 
+					#./peakavg.sh -d  "${InputFolder}/$j" -m -v
 
-				# get corrected peaks, peaks and averages as summary - all hours
-				./peakavg.sh -d  "${InputFolder}/$j" -m -v -a
+					# get corrected peaks, peaks and averages as summary - all hours
+					./peakavg.sh -d  "${InputFolder}/$j" -m -v -a
 				
-			fi	
-	fi		
+				fi	
+				
+		fi		
 
 	
-	if [ ! -z $websys ];
-	then
+		if [ ! -z $websys ];
+		then
 	
-		# 3. Find average of top 10 average response times in websys.Monitor
+			# 3. Find average of top 10 average response times in websys.Monitor
 
-		csvfile=`ls "${InputFolder}/${j}/"*websysMonitor.csv`
+			csvfile=`ls "${InputFolder}/${j}/"*websysMonitor.csv`
 	
-		ztempname=`basename $csvfile`
+			ztempname=`basename $csvfile`
 
-		outFolder=${InputFolder}/zwebsysOuttemp
-		mkdir ${outFolder}
+			outFolder=${InputFolder}/zwebsysOuttemp
+			mkdir ${outFolder}
 		
-		# sort csv file
+			# sort csv file
 
 
-		sort -g -r -t, -k4 ${csvfile} >${outFolder}/${foldername}_$ztempname
+			sort -g -r -t, -k4 ${csvfile} >${outFolder}/${foldername}_$ztempname
 		
-		head -10 ${outFolder}/${foldername}_$ztempname | cut -f4 -d, >${outFolder}/${ztempname}_zzzcsvtemp.txt
+			head -10 ${outFolder}/${foldername}_$ztempname | cut -f4 -d, >${outFolder}/${ztempname}_zzzcsvtemp.txt
 
-		awk '{ sum += $1 } END { if (NR > 0) printf "%.4f\n", sum / NR }' ${outFolder}/${ztempname}_zzzcsvtemp.txt > ${csvfile}.top10Avg.txt
+			awk '{ sum += $1 } END { if (NR > 0) printf "%.4f\n", sum / NR }' ${outFolder}/${ztempname}_zzzcsvtemp.txt > ${csvfile}.top10Avg.txt
 
-		printf "${j}," >>"${csvoutfile}"
-		awk '{ sum += $1 } END { if (NR > 0) printf "%.4f\n", sum / NR }' ${outFolder}/${ztempname}_zzzcsvtemp.txt >>"${csvoutfile}"
+			printf "${j}," >>"${csvoutfile}"
+			awk '{ sum += $1 } END { if (NR > 0) printf "%.4f\n", sum / NR }' ${outFolder}/${ztempname}_zzzcsvtemp.txt >>"${csvoutfile}"
 
+		fi
+
+	else
+		echo "Skipping hold dir"
 	fi
-
+		
 done
 	
 #cat "${outfile}"
